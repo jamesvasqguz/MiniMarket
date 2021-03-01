@@ -1,0 +1,53 @@
++Numero n de carretas se definiran posterior mente en el sistema
++Variable m numero de cajas que existen
++Existe una cola de pagos
++cola de espera
++clientes
++lista circular
+
+Descripcion:
+-Hay una cantidad limitada de carretas disponibles, Si llega un cliente y no hay ninguna carreta disponible, este cliente espera a que lo haya.
+-Cada cliente que que ingresa debe pasar por algun proceso(cajas)
+-Para pagar el cliente debe esperar su turno en la cola de pagos
+-Cuando un cliente paga en la caja su carreta queda disponible
+
+Carretas:
+El usuario define el numero de carretas
+Las carretas estan organizadas en pilas una independiente de la otra se puede dar el caso que una pila esté vacía y la otra completamente llena.
+Datos de los nodos de esta pila sera solamente un numero indentificador de la carreta
+
+Cola de espera de carretas:
+Tienen un limite de carretas->se implementa una cola de carretas
+
+Compras:
+Despues de tomar la carreta entra en una lista circular simplemente enlazada de Compras
+La forma de salir es generando un numero aleatorio entre 0 a 100 Si el número generado no coincide con el índice de algún cliente, entonces no se realiza
+ninguna acción.
+Entra a la lista circular se ejecuta un metodo que genere un numero aleatorio y si el numero aleatorio obtenico coincide con el indice de algun cliente este sale y se dirige a la cola de pagos
+
+Cola de pagos:
+Solo es una unica cola de pagos para pasar a las cajas. 
+Si hay cajas disponibles pasan directamente, Si las cajas están llenas, entonces se hace una cola en espera de que alguna caja se desocupe.
+
+Cajas:
+Caracteristicas: 
+● Número de caja (int caja)
+● Tiempo de servicio
+● Estado (Libre u ocupado) (boolean Estado )
+● Cliente que está siendo atendido (int idCliente)
+● Carreta que usa el cliente (int idCarreta)
+Las cajas estan organizadas en una lista doblemente enlazada ordenada por numero de cajas
+
+Luego de pagar
+Se genera un numero aleatorio entre 1 y 2 para determinar a que pila de carretas se coloca
+el cliente es removido del sistema free(cliente)
+
+Listado de listas, colas y pilas que se van a encontrar en la ejercucion del programa en orden de acciones:
+->Cola de espera para los clientes(Si hay carretas disponibles no ingresan a esta cola los clientes, 
+    de lo contario tienen que hacer cola).
+->2 Pilas para las carretas(Se define el numero de las carretas n y quedara distribuido asi:
+    para la pila 1= n/2, para la pila 2= n/2).
+->Lista circular simplemente enlazada de Compras.
+->Cola de pagos(Luego de salir de las comoras si no hay niguna caja vacia entonces el cliente ingresa a la 
+    cola de pagos)
+->Lista doblemente enlazada ordenada de cajas(sale de aca y acaba el proceso del cliente en el MINIMARKET).
