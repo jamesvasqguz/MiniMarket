@@ -1,0 +1,18 @@
+digraph G {
+    node [shape=box];
+
+    "Cola Espera"->Cliente_1
+    Cliente_1->Cliente_2
+    Cliente_2->Cliente_3
+    Cliente_3->Cliente_4
+    Cliente_4->Cliente_5
+    Cliente_5->Cliente_6
+
+    graph [
+    rankdir = "LR"
+    ];
+    "node0" [
+    label = "<f0> Carreta 1 | <f1> Carreta 2 | <f2> "
+    shape = "record"
+    ];
+    }

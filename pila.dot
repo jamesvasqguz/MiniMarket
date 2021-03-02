@@ -1,0 +1,9 @@
+digraph g {
+graph [
+rankdir = "LR"
+];
+"node0" [
+label = "<f0> Carreta 1 | <f1> Carreta 2 | <f2> "
+shape = "record"
+];
+}

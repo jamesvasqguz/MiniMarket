@@ -3,151 +3,120 @@
 #include <time.h>
 #include <string.h>
 #include <stdbool.h>
-#define true 1
-#define false 0
+
+#include "PilasCarretas.h"
 
 /*Se declaran las funciones que se ejecutaran en el programa.*/
 int salirLCompras();
 int destinoCarreta();
+void iniciarColaCarretas(int clientes);
+void iniciarPilasCarretas(int cantCarretas);
 
-/*Declaramos las estructuras de los objetos partes del programa.*/
-typedef struct Cliente
-{
-    int *idC;
-    struct Cliente *sig;
-} NodoCliente;
-
-typedef struct Carreta
-{
-    int *idCarreta;
-    struct Carreta *sig;
-} NodoCarreta;
-
-typedef struct Caja
-{
-    int *idCaja;
-    bool estado : true;
-    int refCliente;
-    int refCarreta;
-    struct Caja *sig;
-} NodoCaja;
-
-/*Iniciamos la cola de espera de los clientes*/
-NodoCliente *iniciarCola(NodoCliente *ColaEspera)
-{
-    ColaEspera = NULL;
-}
-
-/*Agregar Cliente a la cola de Espera*/
-NodoCliente *aggClienteCola(NodoCliente *ColaEspera, int *idC)
-{
-    /*Creamos el nodo de cliente con el parametro ID que recibe.*/
-    NodoCliente *nuevoCliente;
-    NodoCliente *tmp;
-    nuevoCliente = (NodoCliente *)malloc(sizeof(NodoCliente));
-    /*Verificamos si hay espacio en la memoria para crear el nuevo cliente*/
-    if (nuevoCliente != NULL)
-    {
-        nuevoCliente->idC = idC;
-        nuevoCliente->sig = NULL;
-        /*Insertamos el cliente a la Cola de espera de las carretas, en el caso de que no haya carretas disponibles.*/
-        /*Verificamos si la cola esta vacia.*/
-        if (ColaEspera == NULL)
-        {
-            /*Si la cola esta vacia y no hay carretas disponibles el nuevo cliente sera el primer nodo en la cola.*/
-            ColaEspera = nuevoCliente;
-        }
-        else
-        {
-            /*Si la cola no esta vacia el nuevo cliente que se crea sera el ultimo.*/
-            tmp = ColaEspera;
-            while (tmp->sig != NULL)
-            {
-                tmp = tmp->sig;
-            }
-            tmp->sig = nuevoCliente;
-        }
-        /*Si hay carretas disponibles el cliente pasa por su carreta, y se va directo a pagos.*/
-    }
-    else
-    {
-        printf("\nMemoria llena no se puede crear el cliente.\n");
-    }
-    return ColaEspera;
-}
-
-/*Muestra la cola de espera.*/
-void mostrar(NodoCliente *ColaEspera)
-{
-    while (ColaEspera != NULL)
-    {
-        printf("\n\n Cola de espera ID del Cliente %d puntero de ref %p y su siguiente es: %p \n\n", ColaEspera->idC, ColaEspera, ColaEspera->sig);
-        ColaEspera = ColaEspera->sig;
-    }else
-    {
-        printf("Cola vacia");
-    }
-    
-}
-
-/*Movemos al Cliente a compras su hay carretas disponibles.*/
-NodoCliente *moverClienteCompras(NodoCliente *ColaEspera)
-{
-    if (ColaEspera != NULL)
-    {
-        //Eliminar el primero de la cola.
-        NodoCliente *tmp;
-        tmp = ColaEspera;
-
-        ColaEspera = ColaEspera->sig;
-
-        free(tmp);
-        /*
-        if (tmp->sig!=NULL)
-        {
-            while ((tmp->sig)->sig != NULL)
-            {
-                tmp = tmp->sig;
-            }
-            free(tmp->sig);
-            tmp->sig = NULL;
-        }
-        else
-        {
-            ColaEspera= iniciarCola(ColaEspera);
-        }*/
-    }
-    else
-    {
-        printf("No se puede eliminar por no hay nada en la Cola");
-    }
-    return ColaEspera;
-}
-
+/*Declaramos las variables globales*/
+struct Cliente ColaEspera;
+struct Carreta Pila1;
+struct Carreta Pila2;
+struct Carreta eliminar;
+//Variables de los id de los objetos.
+int idCliente, idCaja, idCarreta, idPila;
+//Variables iniciales para el sistema.
+int cantCarretas, cantCajas, cantColaCarretas;
+//Variable para contar los clientes en la cola de carretas.
+int clientesEnCola;
+int carretasPila;
+int pilas;
 /*Metodo main principal.*/
 int main()
 {
-    NodoCliente *ColaEspera = iniciarCola(ColaEspera);
-    printf("%p \n", ColaEspera);
+    idCliente = 1;
+    idCaja = 1;
+    idCarreta = 1;
+    idPila=1;
+    pilas=1;
+    printf("\n********¡Bienvenidos al MiniMarket!********\n");
+    printf("\n********¡Tu tienda de confianza!********\n\n");
 
-    ColaEspera = aggClienteCola(ColaEspera, (int *)8);
-    ColaEspera = aggClienteCola(ColaEspera, (int *)15);
-    ColaEspera = aggClienteCola(ColaEspera, (int *)25);
+    printf("\n********¡Ingrese el número de carretas para la pila 1.!********\n");
+    scanf("%i", &cantCarretas);
+    iniciarPilasCarretas(cantCarretas);
+    mostrarPila(&Pila1);
+    clientesEnCola = contar(&Pila1);
+    /*moverCarreta(&Pila1,&eliminar);
+    mostrarPila(&Pila1);
+    clientesEnCola = contar(&Pila1);*/
+    printf("Carretas en la pila 1:  %d\n", clientesEnCola);
 
-    mostrar(ColaEspera);
-    printf("\n\n Eliminando\n\n");
-    
+    printf("\n********¡Ingrese el número de carretas para la pila 2.!********\n");
+    scanf("%i", &cantCarretas);
+    iniciarPilasCarretas(cantCarretas);
+    mostrarPila(&Pila2);
+    clientesEnCola = contar(&Pila2);
+    printf("Carretas en la pila 2:  %d\n", clientesEnCola);
+
+    printf("\n********¡Ingrese el número de cajas disponibles en la tienda.!********\n");
+    scanf("%i", &cantCajas);
+
+    printf("\n********¡Ingrese el número de Clientes en la Cola de Espera.!********\n");
+    scanf("%i", &cantColaCarretas);
+    printf("\nCantidad de Carretas: %d , Cantidad de Cajas: %d , Cantidad de Clientes en la ColaEspera: %d\n\n", cantCarretas, cantCajas, cantColaCarretas);
+    iniciarColaCarretas(cantColaCarretas);
+    mostrarCola(&ColaEspera);
+    clientesEnCola = contar(&ColaEspera);
+    printf("Clientes en cola:  %d\n", clientesEnCola);
+    /*
     ColaEspera = moverClienteCompras(ColaEspera);
-    mostrar(ColaEspera);
+    mostrar(ColaEspera);*/
 
-    int numDestino;
+    /*int numDestino;
     numDestino = destinoCarreta();
     printf("Destino de la carreta es: %d\n", numDestino);
 
     int numSalirCompras;
     numSalirCompras = salirLCompras();
     printf("El indice del cliente con el que sale es: %d\n", numSalirCompras);
-    return 0;
+    return 0;*/
+}
+
+/*Metodo para agregar la cantidad de clientes en la cola de carretas dado po el usuario*/
+void iniciarColaCarretas(int clientes)
+{
+    for (int i = 0; i < clientes; i++)
+    {
+        struct Cliente *nuevoCliente = (struct Cliente *)malloc(sizeof(struct Cliente));
+        nuevoCliente->id = idCliente;
+        printf("Cliente # %d agregado a la cola de carretas. ", nuevoCliente->id);
+        idCliente++;
+        aggClienteCola(&ColaEspera, nuevoCliente);
+    }
+}
+
+void iniciarPilasCarretas(int carretas)
+{
+    if (pilas == 1)
+    {
+        for (int i = 0; i < cantCarretas; i++)
+        {
+            struct Carreta *nuevaCarreta = (struct Carreta *)malloc(sizeof(struct Carreta));
+            nuevaCarreta->id = idCarreta;
+            printf("Carreta # %d agregado a la Pila 1 de carretas. ", nuevaCarreta->id);
+            idCarreta++;
+            
+            apilar(&Pila1, nuevaCarreta);
+        }
+    }
+    else if (pilas == 2)
+    {
+        for (int i = 0; i < cantCarretas; i++)
+        {
+            struct Carreta *nuevaCarreta = (struct Carreta *)malloc(sizeof(struct Carreta));
+            nuevaCarreta->id = idCarreta;
+            printf("Carreta # %d agregado a la Pila 2 de carretas. ", nuevaCarreta->id);
+            idCarreta++;
+            apilar(&Pila2, nuevaCarreta);
+        }
+    }
+
+    pilas++;
 }
 
 /*Esta funcion devuelve un numero aleatorio entre 1 y 2 para ver a que pila va la carreta despues de que el cliente paga.*/
