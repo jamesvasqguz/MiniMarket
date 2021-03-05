@@ -39,7 +39,7 @@ void mostrarCajas(struct Caja *ListaCaja){
 void asignarCaja(struct Caja *ListaCajas,struct Cliente *ColaPagos,int paso,struct Carreta *Pila1,struct Carreta *Pila2){
     struct Cliente *cliente;
     struct Caja *tmp = ListaCajas->sig;
-    int cajasDisponibles= contarListaCajas(&ListaCajas);
+    int cajasDisponibles= contarListaCajas(ListaCajas);
     int residuo;
     for (int i = 0; i < cajasDisponibles; i++)
     {

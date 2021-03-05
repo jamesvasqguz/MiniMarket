@@ -16,13 +16,13 @@ void graficar();
 void Opciones();
 void start(int nuevosClientes);
 int salirLCompras();
-int destinoCarreta();
 void iniciarCajas(int cantCajas);
 void iniciarColaCarretas(int clientes);
 void iniciarPilasCarretas(int cantCarretas);
 void iniciarColaPagos(int cantCPagos);
 void iniciarListaCompras(int cantLCompras);
 void ingresarClientes();
+void moverClientesACompras();
 
 
 /*Declaramos las variables globales*/
@@ -110,7 +110,7 @@ void simulacion(){
     scanf("%d", &cantLCompras);
     iniciarListaCompras(cantLCompras);
     mostrarListaCompras(&ListaCompras);
-
+    Opciones();    
     /*int numDestino;
     numDestino = destinoCarreta();
     printf("Destino de la carreta es: %d\n", numDestino);
@@ -119,7 +119,7 @@ void simulacion(){
     numSalirCompras = salirLCompras();
     printf("El indice del cliente con el que sale es: %d\n", numSalirCompras);
     */
-};
+}
 
 /*Este metodo permite realizar las acciones del sistema*/
 void Opciones()
@@ -131,7 +131,7 @@ void Opciones()
         printf("\n   Opciones del Sistema.");
         printf("\n   1. Siguiente Paso.");
         printf("\n   2. Graficar Paso.");
-        printf("\n   3. Salir.");
+        printf("\n   3. Salir.\n\n");
         scanf("%d", &opcion);
         switch (opcion)
         {
@@ -177,11 +177,11 @@ void start(int nuevosClientes)
         if (tmp != NULL)
         {
             tmp->sig = NULL;
-            agregarClienteColaPagar(tmp, &ColaDePagos);
+            encolarCliente(tmp, &ColaDePagos);
         }
     }
     //verificando si hay cajas disponibles para ingresar a clientes y clientes listos para salir
-    asignarCaja(&ListaCajas,&ColaDePagos,&Pila1,&Pila2,paso);
+    asignarCaja(&ListaCajas,&ColaDePagos,paso,&Pila1,&Pila2);
 
     //Sumamos 1 a cada paso que indica que el numero de simulacion que se llevara acabo.
     paso++;
@@ -297,14 +297,14 @@ void ingresarClientes()
         //Si la pila 1 tiene disponibles carretas le asigamos carreta al cliente nuevo.
         nuevoCliente->carretaID = moverCarreta(&Pila1);
         //Luego de obtener su carreta ingresamos al cliente nuevo a la lista de compras con su carreta.
-        agregarClienteListaCompras(nuevoCliente, &ListaCompras);
+        agregarClienteCompras(nuevoCliente, &ListaCompras);
     }
     else if (carretasPila2 > 0)
     {
         //Si la pila 1 tiene disponibles carretas le asigamos carreta al cliente nuevo.
         nuevoCliente->carretaID = moverCarreta(&Pila2);
         //Luego de obtener su carreta ingresamos al cliente nuevo a la lista de compras con su carreta.
-        agregarClienteListaCompras(nuevoCliente, &ListaCompras);
+        agregarClienteCompras(nuevoCliente, &ListaCompras);
     }
     else
     {
@@ -327,13 +327,13 @@ void moverClientesACompras()
         {
             struct Cliente *cliente = moverCliente(&ColaEspera);
             cliente->carretaID = moverCarreta(&Pila1);
-            agregarClienteListaCompras(cliente, &ListaCompras);
+            agregarClienteCompras(cliente, &ListaCompras);
         }
         else if (carretasP2 > 0)
         {
             struct Cliente *cliente = moverCliente(&ColaEspera);
             cliente->carretaID = moverCarreta(&Pila2);
-            agregarClienteListaCompras(cliente, &ListaCompras);
+            agregarClienteCompras(cliente, &ListaCompras);
         }
     }
 }
@@ -355,22 +355,13 @@ void graficar()
     graficarPilaCarretas(&Pila2, p2, salida);
     graficarColaClientesCarretas(&ColaEspera, salida);
 
-    strcat(salida, "}\" | dot -Tpng > grafica/Paso");
+    strcat(salida, "}\" | dot -Tpng > Paso");
     sprintf(numPaso, "%d", (paso - 1));
     strcat(salida, numPaso);
     strcat(salida, ".png");
     system(salida);
     memset(salida, 0, 1000);
     Opciones();
-}
-
-/*Esta funcion devuelve un numero aleatorio entre 1 y 2 para ver a que pila va la carreta despues de que el cliente paga.*/
-int destinoCarreta()
-{
-    int numero;
-    srand((unsigned)time(0));
-    numero = (rand() % 2) + 1;
-    return numero;
 }
 
 /*Este funcion devuelve un numero aleatorio entre 0 y 100 para salir de la lista circular de compras.*/
