@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "ColaEsperaCliente.h"
 
@@ -32,6 +33,7 @@ struct Cliente* moverCliente(struct Cliente *ColaEspera){
         tmp= ColaEspera->sig;
         ColaEspera->sig=ColaEspera->sig->sig;
         ColaEspera->cantidad--;
+        tmp->sig=NULL;
         return tmp;
     }else{
         //Si no tiene clientes retorna null.
@@ -54,6 +56,28 @@ void  mostrarCola(struct Cliente *ColaEspera){
     }
 }
 
-int contar(struct Cliente *ColaEspera){
+int contarClienteCarreta(struct Cliente *ColaEspera){
     return ColaEspera->cantidad;
+}
+
+void graficarColaClientesCarretas(struct Cliente *ColaEspera,char salida[]){
+    struct Cliente *cliente = ColaEspera;
+    strcat(salida,"subgraph cluster_5{label=\"Cola_Espera_Carretas\"");
+    char subCodigo[4]="";
+    if(cliente->sig!=NULL){
+        cliente=cliente->sig;
+        while(cliente!=NULL){
+            strcat(salida," Cliente_");
+            sprintf(subCodigo,"%d",cliente->id);
+            strcat(salida,subCodigo);
+            if(cliente->sig!=NULL){
+                strcat(salida," -> ");
+                strcat(salida," Cliente_");
+                sprintf(subCodigo,"%d",cliente->sig->id);
+                strcat(salida,subCodigo);
+            }
+            cliente=cliente->sig;
+        }
+    }
+    strcat(salida,"}");
 }

@@ -46,7 +46,12 @@
         "streambuf": "cpp",
         "typeinfo": "cpp",
         "thread": "c",
-        "pilascarretas.h": "c"
+        "pilascarretas.h": "c",
+        "listacajas.h": "c",
+        "listacompras.h": "c",
+        "colaesperacliente.h": "c",
+        "colapagos.h": "c",
+        "string.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

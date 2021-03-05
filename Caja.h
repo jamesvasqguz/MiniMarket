@@ -12,6 +12,7 @@ struct Caja
     struct Carreta *carretaCliente;
     struct Caja *sig;
     struct Caja *ant;
+    int cantidad;
 };
 
 #endif

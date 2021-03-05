@@ -1,2 +1,2 @@
-gcc MiniMarket.c Cliente.h Caja.h Carreta.h ColaEsperaCliente.h ColaEsperaCliente.c PilasCarretas.h PilasCarretas.c -o salida.out
+gcc MiniMarket.c Cliente.h Caja.h Carreta.h ColaEsperaCliente.h ColaEsperaCliente.c PilasCarretas.h PilasCarretas.c ColaPagos.h ColaPagos.c ListaCajas.h ListaCajas.c ListaCompras.c ListaCompras.h -o salida.out
 ./salida.out

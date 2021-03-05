@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "ColaPagos.h"
 
@@ -17,7 +18,7 @@ void encolarCliente(struct Cliente *ColaPagos,struct Cliente *cliente){
                 tmp=tmp->sig;
             }
             tmp->sig=cliente;
-            printf("El cliente %d se agrega a la cola de pagos con la carreta %d\n",clienteAAgregar->id,clienteAAgregar->carreta->id);
+            printf("El cliente %d se agrega a la cola de pagos con la carreta %d\n",cliente->id,cliente->carretaID->id);
         }
         ColaPagos->cantidad++;
 }
@@ -36,4 +37,27 @@ void mostrarColaPagos(struct Cliente *ColaPagos){
 /*Cuenta cuantos clientes estan en la cola de pagos.*/
 int contarCP(struct Cliente *ColaPagos){
     return ColaPagos->cantidad;
+}
+
+void graficarColaClientesPagar(struct Cliente *ColaDePagos,char salida[]){
+    struct Cliente *cliente = ColaDePagos;
+    strcat(salida,"subgraph cluster_6{label=\"Cola_De_Pagos\"");
+    char subCodigo[4]="";
+    if(cliente->sig!=NULL){
+        cliente=cliente->sig;
+        while(cliente!=NULL){
+            strcat(salida," Cliente_");
+            sprintf(subCodigo,"%d",cliente->id);
+            strcat(salida,subCodigo);
+            strcat(salida," ");
+            if(cliente->sig!=NULL){
+                strcat(salida,"-> Cliente_");
+                sprintf(subCodigo,"%d",cliente->sig->id);
+                strcat(salida,subCodigo);
+                strcat(salida," ");
+            }
+            cliente=cliente->sig;
+        }
+    }
+    strcat(salida,"}");
 }
